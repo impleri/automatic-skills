@@ -15,6 +15,7 @@ on:
         description: 'Name of the build platform to cache dependencies. It can be "maven", "gradle" or "sbt".'
         default: 'gradle'
         required: false
+    secrets:
       maven-user:
         description: 'Username for Gradle/Maven repository'
         default: ''
@@ -55,8 +56,8 @@ jobs:
         with:
           arguments: publish
         env:
-          MAVEN_USER: ${{ inputs.maven-user }}
-          MAVEN_TOKEN: ${{ inputs.maven-password }}
+          MAVEN_USER: ${{ secrets.maven-user }}
+          MAVEN_TOKEN: ${{ secrets.maven-password }}
       - name: Remove Extra JARs
         run: rm -f {fabric,forge}/build/libs/*{sources,dev,shadow}*.jar
       - name: Move Fabric JARs
@@ -112,10 +113,10 @@ jobs:
       - uses: Kir-Antipov/mc-publish@v3.2
         with:
           loaders: fabric
-          modrinth-id: ${{ inputs.modrinth-id }}
-          modrinth-token: ${{ inputs.modrinth-token }}
-          curseforge-id: ${{ inputs.curseforge-id }}
-          curseforge-token: ${{ inputs.curseforge-token }}
+          modrinth-id: ${{ secrets.modrinth-id }}
+          modrinth-token: ${{ secrets.modrinth-token }}
+          curseforge-id: ${{ secrets.curseforge-id }}
+          curseforge-token: ${{ secrets.curseforge-token }}
           files: "build/libs/*-fabric.jar"
 
   publish-forge:
@@ -132,8 +133,8 @@ jobs:
       - uses: Kir-Antipov/mc-publish@v3.2
         with:
           loaders: forge
-          modrinth-id: ${{ inputs.modrinth-id }}
-          modrinth-token: ${{ inputs.modrinth-token }}
-          curseforge-id: ${{ inputs.curseforge-id }}
-          curseforge-token: ${{ inputs.curseforge-token }}
+          modrinth-id: ${{ secrets.modrinth-id }}
+          modrinth-token: ${{ secrets.modrinth-token }}
+          curseforge-id: ${{ secrets.curseforge-id }}
+          curseforge-token: ${{ secrets.curseforge-token }}
           files: "build/libs/*-forge.jar"
