@@ -5,6 +5,7 @@ on:
       label:
         description: 'Initial label to add to PR'
         default: 'patch'
+        type: string
         required: false
 
 jobs:

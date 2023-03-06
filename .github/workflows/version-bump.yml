@@ -6,26 +6,32 @@ on:
       git-email:
         description: 'Email address to use for git commit'
         default: 'github-actions@github.com'
+        type: string
         required: false
       git-user:
         description: 'Username to use for git commit'
         default: 'github-actions'
+        type: string
         required: false
       commit-message:
         description: 'Commit message to use for version bump'
         default: 'Version bump'
+        type: string
         required: false
       distribution:
         description: 'Java distribution. See the list of supported distributions in README file'
         default: 'temurin'
+        type: string
         required: false
       java-version:
         description: 'The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file'
         default: '17'
+        type: string
         required: false
       cache:
         description: 'Name of the build platform to cache dependencies. It can be "maven", "gradle" or "sbt".'
         default: 'gradle'
+        type: string
         required: false
 
 jobs:

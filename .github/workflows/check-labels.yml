@@ -5,6 +5,7 @@ on:
       options:
         description: 'Labels that count as valid'
         default: 'major, minor, patch'
+        type: string
         required: false
 jobs:
   check_labels:

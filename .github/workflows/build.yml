@@ -6,14 +6,17 @@ on:
       distribution:
         description: 'Java distribution. See the list of supported distributions in README file'
         default: 'temurin'
+        type: string
         required: false
       java-version:
         description: 'The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file'
         default: '17'
+        type: string
         required: false
       cache:
         description: 'Name of the build platform to cache dependencies. It can be "maven", "gradle" or "sbt".'
         default: 'gradle'
+        type: string
         required: false
 
 jobs:
