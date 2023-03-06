@@ -1,0 +1,20 @@
+name: 'Check Versioning Label'
+on:
+  workflow_call:
+    inputs:
+      options:
+        description: 'Labels that count as valid'
+        default: 'major, minor, patch'
+        required: false
+jobs:
+  check_labels:
+    name: 'Check PR Labels'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mheap/github-action-required-labels@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          mode: exactly
+          count: 1
+          labels: ${{ inputs.options }}

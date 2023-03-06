@@ -1,0 +1,17 @@
+name: 'Add Initial Versioning Label'
+on:
+  workflow_call:
+    inputs:
+      label:
+        description: 'Initial label to add to PR'
+        default: 'patch'
+        required: false
+
+jobs:
+  add_label:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.opened == true
+    steps:
+      - uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: ${{ inputs.label }}
