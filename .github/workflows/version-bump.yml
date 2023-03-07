@@ -71,5 +71,5 @@ jobs:
       - name: Commit version bump
         run: |
           git add version.properties
-          git commit -m "${{ inputs.commit-message }} [skip-deploy]"
+          git commit -m "${{ inputs.commit-message }} [publish]"
           git push
