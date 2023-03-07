@@ -20,7 +20,7 @@ on:
         required: false
 
 jobs:
-  build:
+  build_java:
     name: Build
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip-deploy]')"

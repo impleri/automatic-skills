@@ -8,7 +8,7 @@ on:
         type: string
         required: false
 jobs:
-  check_labels:
+  check_pr_labels:
     name: 'Check PR Labels'
     runs-on: ubuntu-latest
     steps:

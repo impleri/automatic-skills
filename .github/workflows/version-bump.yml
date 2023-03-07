@@ -35,7 +35,7 @@ on:
         required: false
 
 jobs:
-  bump:
+  bump_version:
     name: Bump Version
     runs-on: ubuntu-latest
     permissions:

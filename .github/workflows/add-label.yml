@@ -9,7 +9,8 @@ on:
         required: false
 
 jobs:
-  add_label:
+  add_initial_label:
+    name: Add label to PR
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-add-labels@v1
