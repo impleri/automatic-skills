@@ -3,6 +3,16 @@ name: Publish
 on:
   workflow_call:
     inputs:
+      git-email:
+        description: 'Email address to use for git commit'
+        default: 'github-actions@github.com'
+        type: string
+        required: false
+      git-user:
+        description: 'Username to use for git commit'
+        default: 'github-actions'
+        type: string
+        required: false
       distribution:
         description: 'Java distribution. See the list of supported distributions in README file'
         default: 'temurin'
@@ -39,103 +49,39 @@ on:
         required: true
 
 jobs:
-  publish-maven:
-    name: Publish to Maven
+  release:
+    name: Publish
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, '[publish]')
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: actions/setup-java@v3
         with:
           distribution: ${{ inputs.distribution }}
           java-version: ${{ inputs.java-version }}
           cache: ${{ inputs.cache }}
       - uses: gradle/wrapper-validation-action@v1
-      - name: Publish with Gradle
+      - name: Git config
+        run: |
+          git config --global user.email ${{ inputs.git-email }}
+          git config --global user.name ${{ inputs.git-user }}
+      - name: Release and Publish
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: publish
+          arguments: releaseVersion publish publishUnified
         env:
           MAVEN_USER: ${{ secrets.maven-user }}
           MAVEN_TOKEN: ${{ secrets.maven-password }}
-      - name: Remove Extra JARs
-        run: rm -f {fabric,forge}/build/libs/*{sources,dev,shadow}*.jar
-      - name: Move Fabric JARs
-        run: for f in fabric/build/libs/*.jar; do mv "$f" "${f/.jar/-fabric.jar}"; done
-      - name: Move Forge JARs
-        run: for f in forge/build/libs/*.jar; do mv "$f" "${f/.jar/-forge.jar}"; done
-      - name: Box Fabric JARs
-        uses: actions/upload-artifact@v3
-        with:
-          name: fabric
-          path: fabric/build/libs
-      - name: Box Forge JARs
-        uses: actions/upload-artifact@v3
-        with:
-          name: forge
-          path: forge/build/libs
-
-  publish-github:
-    name: Release to Github
-    needs: publish-maven
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - name: Unbox Fabric JARs
-        uses: actions/download-artifact@v3
-        with:
-          name: fabric
-          path: build/libs
-      - name: Unbox Forge JARs
-        uses: actions/download-artifact@v3
-        with:
-          name: forge
-          path: build/libs
+          CURSEFORGE_ID: ${{ secrets.curseforge-id }}
+          CURSEFORGE_TOKEN: ${{ secrets.curseforge-token }}
+          MODRINTH_ID: ${{ secrets.modrinth-id }}
+          MODRINTH_TOKEN: ${{ secrets.modrinth-token }}
+      - name: Commit version
+        run: git push --tags
       - uses: Kir-Antipov/mc-publish@v3.2
         with:
-          github-token: ${{ github.token }}
           github-generate-changelog: true
-          files: "build/libs/*.jar"
-
-  publish-fabric:
-    name: Release Fabric version
-    needs: publish-maven
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Unbox Fabric JARs
-        uses: actions/download-artifact@v3
-        with:
-          name: fabric
-          path: build/libs
-      - uses: Kir-Antipov/mc-publish@v3.2
-        with:
-          loaders: fabric
-          modrinth-id: ${{ secrets.modrinth-id }}
-          modrinth-token: ${{ secrets.modrinth-token }}
-          curseforge-id: ${{ secrets.curseforge-id }}
-          curseforge-token: ${{ secrets.curseforge-token }}
-          files: "build/libs/*-fabric.jar"
-
-  publish-forge:
-    name: Publish Forge version to Curseforge and Modrinth
-    needs: publish-maven
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Unbox Forge JARs
-        uses: actions/download-artifact@v3
-        with:
-          name: forge
-          path: build/libs
-      - uses: Kir-Antipov/mc-publish@v3.2
-        with:
-          loaders: forge
-          modrinth-id: ${{ secrets.modrinth-id }}
-          modrinth-token: ${{ secrets.modrinth-token }}
-          curseforge-id: ${{ secrets.curseforge-id }}
-          curseforge-token: ${{ secrets.curseforge-token }}
-          files: "build/libs/*-forge.jar"
