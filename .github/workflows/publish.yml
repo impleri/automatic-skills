@@ -69,10 +69,16 @@ jobs:
         run: |
           git config --global user.email ${{ inputs.git-email }}
           git config --global user.name ${{ inputs.git-user }}
-      - name: Release and Publish
+      - name: Bump version
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: releaseVersion publish publishUnified
+          arguments: releaseVersion
+      - name: Commit version
+        run: git push --tags
+      - name: Publish
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: publish publishUnified
         env:
           MAVEN_USER: ${{ secrets.maven-user }}
           MAVEN_TOKEN: ${{ secrets.maven-password }}
