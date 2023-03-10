@@ -88,4 +88,4 @@ jobs:
           MODRINTH_ID: ${{ secrets.modrinth-id }}
           MODRINTH_TOKEN: ${{ secrets.modrinth-token }}
       - name: Commit version
-        run: git push --tags
+        run: git push --follow-tags
