@@ -89,6 +89,3 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.modrinth-token }}
       - name: Commit version
         run: git push --tags
-      - uses: Kir-Antipov/mc-publish@v3.2
-        with:
-          github-generate-changelog: true
