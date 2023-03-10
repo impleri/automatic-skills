@@ -29,6 +29,9 @@ on:
         type: string
         required: false
     secrets:
+      github-token:
+        description: 'Token to use for pushing back to GitHub'
+        required: true
       maven-user:
         description: 'Username for Gradle/Maven repository'
         required: false
@@ -60,6 +63,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.base.ref }}
+          token: ${{ secrets.github-token }}
       - uses: actions/setup-java@v3
         with:
           distribution: ${{ inputs.distribution }}
@@ -75,7 +79,7 @@ jobs:
         with:
           arguments: releaseVersion
       - name: Commit version
-        run: git push --tags
+        run: git push --follow-tags
       - name: Publish
         uses: gradle/gradle-build-action@v2
         with:
@@ -87,5 +91,3 @@ jobs:
           CURSEFORGE_TOKEN: ${{ secrets.curseforge-token }}
           MODRINTH_ID: ${{ secrets.modrinth-id }}
           MODRINTH_TOKEN: ${{ secrets.modrinth-token }}
-      - name: Commit version
-        run: git push --follow-tags
