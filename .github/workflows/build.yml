@@ -36,3 +36,4 @@ jobs:
         with:
           arguments: build
           cache-read-only: ${{ !github.ref_protected }}
+          gradle-home-cache-cleanup: true
