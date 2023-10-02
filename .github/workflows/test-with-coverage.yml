@@ -58,6 +58,6 @@ jobs:
           cache-read-only: ${{ !github.ref_protected }}
           gradle-home-cache-cleanup: true
       - name: Submit to CodeCoverage
-        run: ./cc-test-reporter after-build --exit-code 0 --input-type ${{ inputs.coverage-type }} ${{ inputs.path }}
+        run: ./cc-test-reporter after-build ${{ inputs.path }} --exit-code 0 --input-type ${{ inputs.coverage-type }}
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
