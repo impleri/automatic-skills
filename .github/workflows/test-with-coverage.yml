@@ -35,16 +35,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: impleri/automatic-skills/.github/workflows/pre-coverage.yml@main
+      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - run: chmod +x ./cc-test-reporter
+      - name: Notify CodeClimate Before Build
+        run: ./cc-test-reporter before-build
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
-      - uses: impleri/automatic-skills/.github/workflows/test.yml@main
+      - uses: actions/setup-java@v3
         with:
           distribution: ${{ inputs.distribution }}
           java-version: ${{ inputs.java-version }}
           cache: ${{ inputs.cache }}
-      - uses: impleri/automatic-skills/.github/workflows/post-coverage.yml@main
+      - uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/gradle-build-action@v2
         with:
-          path: ${{ inputs.path}}
+          arguments: test
+          cache-read-only: ${{ !github.ref_protected }}
+          gradle-home-cache-cleanup: true
+      - name: Submit to CodeCoverage
+        run: ./cc-test-reporter after-build --exit-code 0 ${{ inputs.path }}
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
