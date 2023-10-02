@@ -18,6 +18,11 @@ on:
         default: 'gradle'
         type: string
         required: false
+      coverage-type:
+        description: 'File type for code coverage report'
+        default: 'cobertura'
+        type: string
+        required: false
       path:
         description: 'Coverage report file path'
         default: 'common/build/reports/jacoco/test/cobertura.xml'
@@ -53,6 +58,6 @@ jobs:
           cache-read-only: ${{ !github.ref_protected }}
           gradle-home-cache-cleanup: true
       - name: Submit to CodeCoverage
-        run: ./cc-test-reporter after-build --exit-code 0 ${{ inputs.path }}
+        run: ./cc-test-reporter after-build --exit-code 0 --input-type ${{ inputs.coverage-type }} ${{ inputs.path }}
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
