@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: ./.github/workflows/fetch-coverage.yml
+      - uses: impleri/automatic-skills/.github/workflows/fetch-coverage.yml@main
       - name: Notify CodeClimate
         run: ./cc-test-reporter before-build
         env:

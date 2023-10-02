@@ -35,15 +35,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/workflows/pre-coverage.yml
+      - uses: impleri/automatic-skills/.github/workflows/pre-coverage.yml@main
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
-      - uses: ./.github/workflows/test.yml
+      - uses: impleri/automatic-skills/.github/workflows/test.yml@main
         with:
           distribution: ${{ inputs.distribution }}
           java-version: ${{ inputs.java-version }}
           cache: ${{ inputs.cache }}
-      - uses: ./.github/workflows/post-coverage.yml
+      - uses: impleri/automatic-skills/.github/workflows/post-coverage.yml@main
         with:
           path: ${{ inputs.path}}
         env:
