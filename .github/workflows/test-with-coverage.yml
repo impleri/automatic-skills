@@ -1,0 +1,50 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      distribution:
+        description: 'Java distribution. See the list of supported distributions in README file'
+        default: 'temurin'
+        type: string
+        required: false
+      java-version:
+        description: 'The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file'
+        default: '17'
+        type: string
+        required: false
+      cache:
+        description: 'Name of the build platform to cache dependencies. It can be "maven", "gradle" or "sbt".'
+        default: 'gradle'
+        type: string
+        required: false
+      path:
+        description: 'Coverage report file path'
+        default: 'common/build/reports/jacoco/test/cobertura.xml'
+        type: string
+        required: false
+    secrets:
+      cc-token:
+        description: 'Token to use for interacting with CodeClimate'
+        required: true
+
+jobs:
+  test_with_coverage:
+    name: Test with Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/workflows/pre-coverage.yml
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
+      - uses: ./.github/workflows/test.yml
+        with:
+          distribution: ${{ inputs.distribution }}
+          java-version: ${{ inputs.java-version }}
+          cache: ${{ inputs.cache }}
+      - uses: ./.github/workflows/post-coverage.yml
+        with:
+          path: ${{ inputs.path}}
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}

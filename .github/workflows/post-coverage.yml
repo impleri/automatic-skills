@@ -1,0 +1,26 @@
+name: Coverage Post-Test
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: 'Coverage report file path'
+        default: 'common/build/reports/jacoco/test/cobertura.xml'
+        type: string
+        required: false
+    secrets:
+      cc-token:
+        description: 'Token to use for interacting with CodeClimate'
+        required: true
+
+jobs:
+  pre_coverage:
+    name: Prepare CodeClimate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: ./.github/workflows/fetch-coverage.yml
+      - name: Submit to CodeCoverage
+        run: ./cc-test-reporter after-build --exit-code 0 ${{ inputs.path }}
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
