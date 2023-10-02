@@ -1,4 +1,4 @@
-name: Build
+name: Test with Coverage
 
 on:
   workflow_call:
