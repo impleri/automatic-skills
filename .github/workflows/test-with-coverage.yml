@@ -25,7 +25,7 @@ on:
         required: false
       path:
         description: 'Coverage report file path'
-        default: 'common/build/reports/jacoco/test/cobertura.xml'
+        default: 'reports/cobertura.xml'
         type: string
         required: false
     secrets:
