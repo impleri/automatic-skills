@@ -57,7 +57,11 @@ jobs:
           arguments: test
           cache-read-only: ${{ !github.ref_protected }}
           gradle-home-cache-cleanup: true
+      - name: Format to CodeCoverage
+        run: ./cc-test-reporter format-coverage --coverage-input-type ${{ inputs.coverage-type }} --output ./codeclimate.json ${{ inputs.path }}
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
       - name: Submit to CodeCoverage
-        run: ./cc-test-reporter after-build ${{ inputs.path }} --exit-code 0 --coverage-input-type ${{ inputs.coverage-type }}
+        run: ./cc-test-reporter upload-coverage --input ./codeclimate.json
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.cc-token }}
