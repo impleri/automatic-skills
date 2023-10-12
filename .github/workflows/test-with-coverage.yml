@@ -25,7 +25,7 @@ on:
         required: false
       path:
         description: 'Coverage report file path'
-        default: 'reports/cobertura.xml'
+        default: 'build/reports/cobertura.xml'
         type: string
         required: false
     secrets:
@@ -54,7 +54,7 @@ jobs:
       - uses: gradle/wrapper-validation-action@v1
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: test
+          arguments: jacotura
           cache-read-only: ${{ !github.ref_protected }}
           gradle-home-cache-cleanup: true
       - name: Format to CodeCoverage
