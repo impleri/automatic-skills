@@ -103,6 +103,7 @@ jobs:
         run: git push --follow-tags
       - name: Publish
         uses: gradle/gradle-build-action@v2
+        if: contains(github.event.pull_request.labels.*.name, 'no-publish')
         with:
           arguments: publish publishUnified
         env:
