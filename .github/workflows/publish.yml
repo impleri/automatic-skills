@@ -83,17 +83,17 @@ jobs:
         uses: gradle/gradle-build-action@v2
         if: contains(github.event.pull_request.labels.*.name, 'alpha')
         with:
-          arguments: releaseVersion --preRelease="alpha.1"
+          arguments: releaseVersion --preRelease=alpha.1
       - name: Bump beta version
         uses: gradle/gradle-build-action@v2
         if: contains(github.event.pull_request.labels.*.name, 'beta')
         with:
-          arguments: releaseVersion --preRelease="beta.1"
+          arguments: releaseVersion --preRelease=beta.1
       - name: Bump rc version
         uses: gradle/gradle-build-action@v2
         if: contains(github.event.pull_request.labels.*.name, 'rc')
         with:
-          arguments: releaseVersion -- preRelease="rc.1"
+          arguments: releaseVersion -- preRelease=rc.1
       - name: Promote version
         uses: gradle/gradle-build-action@v2
         if: contains(github.event.pull_request.labels.*.name, 'promote')
