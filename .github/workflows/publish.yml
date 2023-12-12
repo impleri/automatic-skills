@@ -93,12 +93,12 @@ jobs:
         uses: gradle/gradle-build-action@v2
         if: contains(github.event.pull_request.labels.*.name, 'rc')
         with:
-          arguments: releaseVersion -- preRelease=rc.1
+          arguments: releaseVersion --preRelease=rc.1
       - name: Promote version
         uses: gradle/gradle-build-action@v2
         if: contains(github.event.pull_request.labels.*.name, 'promote')
         with:
-          arguments: releaseVersion -- preRelease=-
+          arguments: releaseVersion --preRelease=-
       - name: Commit version
         run: git push --follow-tags
       - name: Publish
